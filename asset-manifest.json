@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/my-react-type-todo/static/js/main.b2face2c.js",
+    "index.html": "/my-react-type-todo/index.html",
+    "main.b2face2c.js.map": "/my-react-type-todo/static/js/main.b2face2c.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.b2face2c.js"
+  ]
+}
