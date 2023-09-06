@@ -1,9 +1,18 @@
-import React from "react";
-import { Categories, IToDo, toDoState } from "../atoms";
-import { useSetRecoilState } from "recoil";
+import React, { useState } from "react";
+import { Categories, IToDo, customCategoryState, toDoState } from "../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { styled } from "styled-components";
+
+const Container = styled.div`
+  margin-top: 2rem;
+  button {
+    margin-right: 0.5rem;
+  }
+`;
 
 const ToDo = ({ text, category, id }: IToDo) => {
   const setToDos = useSetRecoilState(toDoState);
+  const [clicked, setClicked] = useState(false);
   const onClick = (newCategory: IToDo["category"]) => {
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
@@ -14,6 +23,11 @@ const ToDo = ({ text, category, id }: IToDo) => {
         ...oldToDos.slice(targetIndex + 1),
       ];
     });
+    console.log("category: ", category);
+    console.log("newCategory: ", newCategory);
+    if (category !== newCategory) {
+      setClicked((prev) => !prev);
+    }
   };
 
   const deleteToDo = () => {
@@ -26,11 +40,14 @@ const ToDo = ({ text, category, id }: IToDo) => {
     });
   };
 
+  const customCategory = useRecoilValue(customCategoryState);
+
   return (
-    <li>
-      <button onClick={deleteToDo}>❌</button>
-      <span> {text} </span>
-      {category !== Categories.DOING && (
+    <Container>
+      <li>
+        <button onClick={deleteToDo}>❌</button>
+        <span> {text} </span>
+        {/* {category !== Categories.DOING && (
         <button onClick={() => onClick(Categories.DOING)}>Doing</button>
       )}
       {category !== Categories.TO_DO && (
@@ -38,8 +55,16 @@ const ToDo = ({ text, category, id }: IToDo) => {
       )}
       {category !== Categories.DONE && (
         <button onClick={() => onClick(Categories.DONE)}>Done</button>
-      )}
-    </li>
+      )} */}
+        {customCategory.map((cat, index) =>
+          cat.name !== category ? (
+            <button key={index} onClick={() => onClick(cat.name as Categories)}>
+              {cat.text}
+            </button>
+          ) : null
+        )}
+      </li>
+    </Container>
   );
 };
 

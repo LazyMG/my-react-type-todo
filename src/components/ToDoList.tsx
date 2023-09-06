@@ -1,30 +1,79 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { Categories, categoryState, toDoSelector, toDoState } from "../atoms";
+import { categoryState, customCategoryState, toDoSelector } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
+import CreateCategory from "./CreateCategory";
+import { styled } from "styled-components";
+
+const HighContainer = styled.div`
+  padding: 0px 2rem;
+  max-width: 30rem;
+  margin: 0px auto;
+  input {
+    font-size: 1rem;
+  }
+`;
+
+const Title = styled.div`
+  display: flex;
+  justify-content: center;
+  font-size: 4rem;
+  margin-top: 3rem;
+`;
+
+const CategoryContainer = styled.div`
+  margin: 2rem 0;
+  select {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+`;
+
+const ToDoContainer = styled.div`
+  margin: 2rem 0;
+`;
 
 const ToDoList = () => {
   //const toDos = useRecoilValue(toDoState);
   const toDos = useRecoilValue(toDoSelector);
   const [category, setCategory] = useRecoilState(categoryState);
+
   const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
     setCategory(event.currentTarget.value as any);
   };
+  const customCategory = useRecoilValue(customCategoryState);
+  // const categoryArr = [
+  //   { name: Categories.TO_DO, text: "To do" },
+  //   { name: Categories.DOING, text: "Doing" },
+  //   { name: Categories.DONE, text: "Done" },
+  // ];
 
   return (
-    <div>
-      <h1>To Dos</h1>
-      <hr />
-      <select value={category} onInput={onInput}>
-        <option value={Categories.TO_DO}>To Do</option>
+    <HighContainer>
+      <Title>
+        <div>To Dos</div>
+      </Title>
+      <CategoryContainer>
+        <select value={category} onInput={onInput}>
+          {/* <option value={Categories.TO_DO}>To Do</option>
         <option value={Categories.DOING}>Doing</option>
-        <option value={Categories.DONE}>Done</option>
-      </select>
-      <CreateToDo />
-      {toDos?.map((toDo) => (
-        <ToDo key={toDo.id} {...toDo} />
-      ))}
-    </div>
+        <option value={Categories.DONE}>Done</option> */}
+          {customCategory.map((cat, index) => (
+            <option key={index} value={cat.name}>
+              {cat.text}
+            </option>
+          ))}
+        </select>
+        <CreateCategory />
+      </CategoryContainer>
+      <hr />
+      <ToDoContainer>
+        <CreateToDo />
+        {toDos?.map((toDo) => (
+          <ToDo key={toDo.id} {...toDo} />
+        ))}
+      </ToDoContainer>
+    </HighContainer>
   );
 };
 

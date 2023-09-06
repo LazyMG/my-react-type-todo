@@ -1,4 +1,7 @@
 import { atom, selector } from "recoil";
+import { recoilPersist } from "recoil-persist";
+
+const { persistAtom } = recoilPersist();
 
 export const isDarkAtom = atom({
   key: "isDark",
@@ -17,6 +20,11 @@ export interface IToDo {
   id: number;
 }
 
+export interface ICustomCat {
+  name: string;
+  text: string;
+}
+
 export const categoryState = atom<Categories>({
   key: "category",
   default: Categories.TO_DO,
@@ -26,6 +34,17 @@ export const categoryState = atom<Categories>({
 export const toDoState = atom<IToDo[]>({
   key: "toDo",
   default: [],
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const customCategoryState = atom<ICustomCat[]>({
+  key: "customCat",
+  default: [
+    { name: Categories.TO_DO, text: "To do" },
+    { name: Categories.DOING, text: "Doing" },
+    { name: Categories.DONE, text: "Done" },
+  ],
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const toDoSelector = selector({
